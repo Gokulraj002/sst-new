@@ -41,14 +41,17 @@ Promise.all(indexQueries.map(q => pool.query(q)))
 
 const app = express();
 
+// ── Trust proxy (Render / Netlify reverse-proxy) so secure cookies work ──────
+app.set('trust proxy', 1);
+
 // ── CORS ─────────────────────────────────────────────────────────────────────
 const allowedOrigins = [
-  process.env.FRONTEND_URL || 'http://localhost:3000',
+  process.env.FRONTEND_URL,
   'http://localhost:3000',
   'http://127.0.0.1:3000',
   'http://localhost:3001',
   'http://127.0.0.1:3001',
-];
+].filter(Boolean);
 
 app.use(
   cors({
